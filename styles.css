@@ -1,0 +1,183 @@
+/* ===== Controle Financeiro — estilos =====
+   Ideia visual: uma régua de ciclo (de pagamento a pagamento).
+   Fundo frio e neutro, tinta grafite-azulada, uma cor de ação (ultramar)
+   e as cores dos próprios cartões como identidade de cada gasto. */
+
+:root {
+  --bg: #E9EEEE;
+  --surf: #F6F9F9;
+  --surf2: #FFFFFF;
+  --ink: #18222D;
+  --ink2: #566370;
+  --line: #CAD5D8;
+  --acao: #2B42DF;
+  --acao-ink: #FFFFFF;
+  --ok: #1A7556;
+  --atencao: #946500;
+  --risco: #BF1F4B;
+  --sombra: 0 -8px 30px rgba(24, 34, 45, .12);
+  --f-display: 'Bricolage Grotesque', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  --f-body: 'Hanken Grotesk', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0E1418; --surf: #151D23; --surf2: #1B252C;
+    --ink: #E6EDF0; --ink2: #93A3AE; --line: #2A3740;
+    --acao: #8C9AFF; --acao-ink: #0E1418;
+    --ok: #4CC9A0; --atencao: #E0B24A; --risco: #FF7A98;
+    --sombra: 0 -8px 30px rgba(0, 0, 0, .5);
+  }
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.45 var(--f-body);
+  font-variant-numeric: tabular-nums;
+  min-height: 100dvh;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--acao); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3 { font-family: var(--f-display); margin: 0; font-weight: 600; letter-spacing: -.01em; }
+.oculto { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ----- estrutura ----- */
+#app { max-width: 560px; margin: 0 auto; padding: 0 16px calc(96px + env(safe-area-inset-bottom)); }
+.topo { display: flex; align-items: baseline; justify-content: space-between; padding: calc(18px + env(safe-area-inset-top)) 0 6px; }
+.topo h1 { font-size: 1.15rem; }
+.topo .sub { color: var(--ink2); font-size: .9rem; }
+.secao { padding: 22px 0 6px; border-top: 1px solid var(--line); margin-top: 18px; }
+.secao:first-of-type { border-top: 0; margin-top: 0; }
+.secao > h2 { font-size: 1.02rem; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; }
+.secao > h2 .acao { font: 600 .9rem var(--f-body); color: var(--acao); background: none; border: 0; padding: 4px 0; }
+.mudo { color: var(--ink2); }
+.pequeno { font-size: .86rem; }
+.num { font-family: var(--f-display); font-weight: 600; }
+.pos { color: var(--ok); } .neg { color: var(--risco); } .aten { color: var(--atencao); }
+
+/* ----- régua do ciclo ----- */
+.regua { margin: 6px -4px 4px; }
+.regua svg { width: 100%; height: auto; display: block; overflow: visible; }
+.regua .eixo { stroke: var(--ink); stroke-width: 1.5; }
+.regua .tique { stroke: var(--ink2); stroke-width: 1; }
+.regua .tique.sem { stroke: var(--ink); stroke-width: 1.4; }
+.regua .rot { fill: var(--ink2); font: 500 10px var(--f-body); }
+.regua .hoje { stroke: var(--acao); stroke-width: 2; }
+.regua .hoje-rot { fill: var(--acao); font: 700 10px var(--f-body); }
+.regua .fut { fill: none; stroke-width: 1.6; stroke-dasharray: 3 2; }
+.regua .bandeira { fill: var(--ink); }
+.regua .bandeira-t { fill: var(--surf); font: 700 10px var(--f-body); }
+
+/* ----- frase-resumo ----- */
+.frase { font-size: 1.28rem; line-height: 1.32; font-family: var(--f-display); font-weight: 500; letter-spacing: -.012em; margin: 14px 0 4px; }
+.frase b { font-weight: 700; }
+.estado { display: inline-block; font: 700 .78rem var(--f-body); padding: 3px 9px; border-radius: 99px; margin-top: 6px; }
+.estado.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+.estado.atencao { background: color-mix(in srgb, var(--atencao) 18%, transparent); color: var(--atencao); }
+.estado.risco { background: color-mix(in srgb, var(--risco) 16%, transparent); color: var(--risco); }
+.conta-linha { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; margin-top: 12px; font-size: .95rem; }
+.conta-linha dt { color: var(--ink2); } .conta-linha dd { margin: 0; text-align: right; }
+.conta-linha .total { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 6px; margin-top: 4px; display: contents; }
+
+/* ----- alertas ----- */
+.alertas { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.alertas li { padding: 9px 12px; background: var(--surf); border-left: 4px solid var(--atencao); border-radius: 0 10px 10px 0; font-size: .94rem; }
+.alertas li.risco { border-color: var(--risco); }
+.vazio { color: var(--ink2); padding: 8px 0; }
+
+/* ----- linhas de cartão ----- */
+.lista { list-style: none; margin: 0; padding: 0; }
+.linha { display: grid; grid-template-columns: 8px 1fr auto; gap: 0 12px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--line); width: 100%; background: none; border-left: 0; border-right: 0; border-top: 0; text-align: left; }
+.linha:last-child { border-bottom: 0; }
+.linha .cor { width: 8px; align-self: stretch; border-radius: 4px; min-height: 36px; }
+.linha .nome { font-weight: 600; }
+.linha .det { color: var(--ink2); font-size: .86rem; }
+.linha .valor { text-align: right; font-family: var(--f-display); font-weight: 600; }
+.barra { height: 6px; border-radius: 3px; background: var(--line); margin-top: 6px; position: relative; overflow: hidden; }
+.barra i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; }
+.barra .b-usado { opacity: .95; }
+.barra .b-proj { opacity: .38; }
+
+/* ----- três visões ----- */
+.visoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.visao { background: var(--surf); border-radius: 12px; padding: 10px 11px; }
+.visao .rot { font-size: .78rem; color: var(--ink2); display: block; }
+.visao .v { font: 600 1.05rem var(--f-display); display: block; margin-top: 2px; }
+.total-linha { display: flex; justify-content: space-between; padding: 10px 2px 0; font-size: .95rem; }
+
+/* ----- estimados ----- */
+.est { padding: 8px 0; }
+.est .topo-linha { display: flex; justify-content: space-between; font-size: .95rem; }
+.est .barra { height: 5px; }
+
+/* ----- fatura por ciclo (tabela) ----- */
+.tabela { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.tabela th { text-align: right; font-weight: 600; color: var(--ink2); font-size: .8rem; padding: 4px 0; }
+.tabela th:first-child, .tabela td:first-child { text-align: left; }
+.tabela td { text-align: right; padding: 7px 0; border-top: 1px solid var(--line); }
+.tabela td.fraco { color: var(--ink2); }
+
+/* ----- extrato ----- */
+.dia-cab { font: 600 .8rem var(--f-body); color: var(--ink2); padding: 14px 0 4px; }
+.cab-ciclo { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0 4px; }
+.cab-ciclo button { background: var(--surf); border: 1px solid var(--line); border-radius: 10px; width: 40px; height: 36px; font-size: 1.1rem; }
+.filtros { display: flex; gap: 6px; overflow-x: auto; padding: 8px 0; scrollbar-width: none; }
+.filtros::-webkit-scrollbar { display: none; }
+.chip { flex: none; border: 1.5px solid var(--line); background: var(--surf); border-radius: 99px; padding: 6px 13px; font-weight: 600; font-size: .9rem; display: inline-flex; align-items: center; gap: 6px; }
+.chip[aria-pressed="true"], .chip.ativo { border-color: var(--acao); background: color-mix(in srgb, var(--acao) 14%, var(--surf)); color: var(--ink); }
+.chip i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.tag { font-size: .72rem; font-weight: 700; color: var(--ink2); border: 1px solid var(--line); border-radius: 6px; padding: 0 5px; margin-left: 6px; }
+
+/* ----- botões e formulários ----- */
+.btn { border: 0; background: var(--acao); color: var(--acao-ink); font-weight: 700; border-radius: 12px; padding: 13px 18px; min-height: 48px; }
+.btn.sec { background: var(--surf2); color: var(--ink); border: 1.5px solid var(--line); }
+.btn.perigo { background: transparent; color: var(--risco); border: 1.5px solid var(--risco); }
+.btn.bloco { width: 100%; }
+.btn[disabled] { opacity: .5; }
+.campo { display: grid; gap: 5px; margin: 12px 0; }
+.campo > label, .campo > .rotulo { font-weight: 600; font-size: .88rem; color: var(--ink2); }
+.campo input, .campo select, .campo textarea { background: var(--surf2); border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 12px; min-height: 46px; width: 100%; }
+.campo .ajuda { font-size: .82rem; color: var(--ink2); }
+.linha-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.valor-grande { font: 600 2.4rem var(--f-display); border: 0 !important; background: transparent !important; padding: 4px 0 !important; border-bottom: 2px solid var(--line) !important; border-radius: 0 !important; letter-spacing: -.02em; }
+.valor-grande:focus { border-bottom-color: var(--acao) !important; outline: none; }
+.interruptor { display: flex; align-items: center; gap: 10px; font-weight: 600; margin: 12px 0; }
+.interruptor input { width: 22px; height: 22px; accent-color: var(--acao); }
+
+/* ----- folha (modal) ----- */
+.fundo { position: fixed; inset: 0; background: rgba(8, 12, 16, .5); z-index: 30; display: flex; align-items: flex-end; justify-content: center; animation: surgir .18s ease-out; }
+.folha { background: var(--surf); width: 100%; max-width: 560px; max-height: 92dvh; overflow-y: auto; border-radius: 22px 22px 0 0; padding: 18px 18px calc(22px + env(safe-area-inset-bottom)); box-shadow: var(--sombra); animation: subir .22s ease-out; }
+.folha h2 { font-size: 1.15rem; margin-bottom: 4px; }
+.folha .acoes { display: grid; gap: 10px; margin-top: 18px; }
+.folha .fechar { float: right; background: none; border: 0; font-size: 1.5rem; line-height: 1; color: var(--ink2); padding: 4px 8px; }
+@keyframes surgir { from { opacity: 0; } to { opacity: 1; } }
+@keyframes subir { from { transform: translateY(30px); opacity: .6; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .fundo, .folha { animation: none; } }
+
+/* ----- navegação inferior ----- */
+.nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surf); border-top: 1px solid var(--line); box-shadow: var(--sombra); padding-bottom: env(safe-area-inset-bottom); }
+.nav-in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1.5fr 1fr 1fr; align-items: center; padding: 6px 8px; gap: 4px; }
+.nav button.aba { background: none; border: 0; padding: 8px 2px; font-weight: 600; font-size: .78rem; color: var(--ink2); display: grid; justify-items: center; gap: 2px; border-radius: 10px; }
+.nav button.aba svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav button.aba[aria-current="page"] { color: var(--acao); }
+.nav button.lancar { background: var(--acao); color: var(--acao-ink); border: 0; border-radius: 14px; min-height: 48px; font-weight: 800; font-size: 1rem; }
+
+/* ----- login / avisos ----- */
+.login { max-width: 420px; margin: 0 auto; padding: calc(60px + env(safe-area-inset-top)) 20px 40px; }
+.login h1 { font-size: 1.8rem; margin-bottom: 4px; }
+.aviso { background: color-mix(in srgb, var(--atencao) 14%, var(--surf)); border-left: 4px solid var(--atencao); padding: 10px 12px; border-radius: 0 10px 10px 0; font-size: .92rem; margin: 12px 0; }
+.aviso.erro { background: color-mix(in srgb, var(--risco) 12%, var(--surf)); border-color: var(--risco); }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(90px + env(safe-area-inset-bottom)); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; font-weight: 600; z-index: 50; max-width: 90vw; }
+
+/* ----- ajustes ----- */
+.menu-lista { list-style: none; margin: 0; padding: 0; }
+.menu-lista li { border-bottom: 1px solid var(--line); }
+.menu-lista li:last-child { border-bottom: 0; }
+.menu-lista button { width: 100%; background: none; border: 0; text-align: left; padding: 12px 0; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+.menu-lista .a { font-weight: 600; } .menu-lista .b { color: var(--ink2); font-size: .88rem; text-align: right; }
+.arvore .sub { padding-left: 20px; }

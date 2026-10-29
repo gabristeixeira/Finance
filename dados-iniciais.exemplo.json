@@ -1,0 +1,99 @@
+{
+  "_leia": "Modelo FICTÍCIO. Copie, troque pelos seus dados e carregue em Hoje → Carregar meus dados. Nomes em 'cartao' e 'categoria' precisam existir nas listas. 'pergunta' liga a conta ao campo de saldo do formulário (brad, ben ou cof).",
+  "categoriasPrincipais": [
+    "Transporte",
+    "Alimentação",
+    "Assinaturas",
+    "Casa",
+    "Compras"
+  ],
+  "subcategorias": [
+    [
+      "Aplicativo de corrida",
+      "Transporte"
+    ]
+  ],
+  "cartoes": [
+    {
+      "nome": "Cartão A",
+      "limite": 3000,
+      "dia_fechamento": 10,
+      "dia_vencimento": 17,
+      "gasto_variavel_estimado": 800,
+      "cor": "#8A05BE"
+    },
+    {
+      "nome": "Cartão B",
+      "limite": 1000,
+      "dia_fechamento": 3,
+      "dia_vencimento": 10,
+      "gasto_variavel_estimado": 0,
+      "cor": "#EC7000"
+    }
+  ],
+  "recorrentes": [
+    {
+      "descricao": "Streaming",
+      "valor": 30,
+      "modo": "dia_fixo",
+      "dia": 5,
+      "meio": "cartao",
+      "cartao": "Cartão A",
+      "categoria": "Assinaturas"
+    },
+    {
+      "descricao": "Gás",
+      "valor": 100,
+      "modo": "estimado_ciclo",
+      "meio": "pix",
+      "categoria": "Casa"
+    }
+  ],
+  "rendas": [
+    {
+      "vigencia_inicio": "2026-01-01",
+      "salario": 2000,
+      "va": 600,
+      "vr": 400,
+      "observacao": ""
+    }
+  ],
+  "contas": [
+    {
+      "nome": "Conta corrente",
+      "tipo": "corrente",
+      "principal": true,
+      "pergunta": "brad"
+    },
+    {
+      "nome": "Benefício (VA+VR)",
+      "tipo": "beneficio",
+      "principal": true,
+      "pergunta": "ben"
+    },
+    {
+      "nome": "Reserva",
+      "tipo": "reserva",
+      "principal": true,
+      "pergunta": "cof"
+    }
+  ],
+  "config": {
+    "taxa_conversao": 0.043,
+    "meta_investimento": 500,
+    "reserva_minima": 300,
+    "reserva_ideal": 600
+  },
+  "lancamentos": [
+    {
+      "data": "2026-08-20",
+      "descricao": "Compra parcelada (exemplo)",
+      "valor": 600,
+      "meio": "cartao",
+      "cartao": "Cartão A",
+      "categoria": "Compras",
+      "parcelas": 6,
+      "fixo": true
+    }
+  ]
+}
