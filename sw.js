@@ -1,11 +1,11 @@
 // Service worker: deixa o app abrir sem internet (a "casca" fica guardada no aparelho).
 // Os DADOS vêm do Supabase e têm cópia local em localStorage (ver js/db.js).
 // Ao publicar uma nova versão do app, aumente VERSAO para forçar a atualização.
-const VERSAO = 'cf-v1';
+const VERSAO = 'cf-v2';
 const CASCA = [
   './', 'index.html', 'styles.css', 'manifest.webmanifest',
-  'js/app.js', 'js/ui.js', 'js/telas.js', 'js/folhas.js', 'js/db.js', 'js/logic.js', 'js/config.js',
-  'vendor/supabase.js', 'icons/icon-192.png', 'icons/icon-512.png',
+  'app.js', 'ui.js', 'telas.js', 'folhas.js', 'db.js', 'logic.js', 'config.js',
+  'supabase.js', 'icon-192.png', 'icon-512.png',
 ];
 
 self.addEventListener('install', (e) => {
